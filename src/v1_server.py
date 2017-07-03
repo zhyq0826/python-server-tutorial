@@ -1,4 +1,8 @@
 import socket
+import time
+from datetime import datetime
+
+from util import print_red, print_green
 
 
 def main():
@@ -11,9 +15,11 @@ def main():
     s.bind(server_address)
     s.listen(10)
     while 1:
-        print('waitting to recevie message from client')
+        print_green(str(datetime.now()) + ' waitting to recevie message from client')
         client, address = s.accept()
-        print(client.recv(1024))
+        time.sleep(1)
+        msg = client.recv(1024)
+        client.send(msg.capitalize())
         client.close()
 
 

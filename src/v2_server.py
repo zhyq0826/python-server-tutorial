@@ -1,5 +1,9 @@
 import socket
 import os
+import time
+from datetime import datetime
+
+from util import print_red, print_green
 
 
 def main():
@@ -12,13 +16,17 @@ def main():
     s.bind(server_address)
     s.listen(10)
     while 1:
-        print('waitting to recevie message from client')
+        print_green(
+            str(datetime.now()) + ' waitting to recevie message from client')
         client, address = s.accept()
         if not os.fork():   # enter child process
-            print(client.recv(1024))
+            time.sleep(1)   # exec task in 3 seconds
+            msg = client.recv(1024)
+            print_red("child process")
+            client.send(msg.capitalize())
             client.close()      # close client socket
             s.close()       # child does not need this
-            break
+            break           # break child while loop
         client.close()      # parent does not need this
 
 
