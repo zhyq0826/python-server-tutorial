@@ -31,7 +31,7 @@ class ConcurrenceClient(Thread):
         Thread.__init__(self)
 
     def run(self):
-        loop_n_times(5)
+        loop_n_times(100)
 
 
 if __name__ == '__main__':
