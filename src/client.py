@@ -5,24 +5,26 @@ from threading import Thread
 
 from util import print_red, print_green
 
+THREAD_COUNT = 1
+QS_P_THREAD = 1
+
 
 def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_address = ('localhost', 8000)
     print('connect to server {0}'.format(server_address))
     s.connect(server_address)
-    print_green('sending data ==> ')
     msg = 'hello socket'
-    # print(msg)
+    print_green('sending data ==> ' + msg)
     s.send(msg)
-    print_red('recving data <== ')
     msg = s.recv(1024)
-    # print(msg)
+    print_red('recving data <== ' + msg)
 
 
 def loop_n_times(n):
     for _ in range(n):
         main()
+        time.sleep(3)
 
 
 class ConcurrenceClient(Thread):
@@ -31,13 +33,13 @@ class ConcurrenceClient(Thread):
         Thread.__init__(self)
 
     def run(self):
-        loop_n_times(100)
+        loop_n_times(QS_P_THREAD)
 
 
 if __name__ == '__main__':
     start = time.time()
     clients = []
-    for _ in range(4):
+    for _ in range(THREAD_COUNT):
         t = ConcurrenceClient()
         clients.append(t)
         t.start()

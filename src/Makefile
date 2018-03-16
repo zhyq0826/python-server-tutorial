@@ -1,12 +1,12 @@
-v1:
-	python v1_server.py
-v2:
-	python v2_server.py
-v3:
-	python v3_server.py
-v4:
-	python v4_server.py
-v5:
-	python v5_server.py
+select_server:
+	python select_server.py
+server:
+	python server.py
+process_server:
+	python process_server.py
+thread_server:
+	python thread_server.py
+thread_lock_server:
+	python thread_lock_server.py
 client:
 	python client.py
