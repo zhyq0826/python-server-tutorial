@@ -15,7 +15,7 @@ def main():
     s.bind(server_address)
     s.listen(10)
     while 1:
-        print_green(str(datetime.now()) + ' waitting to recevie message from client')
+        print_green(' waitting to recevie message from client')
         client, address = s.accept()
         time.sleep(1)
         msg = client.recv(1024)

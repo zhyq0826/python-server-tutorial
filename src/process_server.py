@@ -16,8 +16,7 @@ def main():
     s.bind(server_address)
     s.listen(10)
     while 1:
-        print_green(
-            str(datetime.now()) + ' waitting to recevie message from client')
+        print_green(' waitting to recevie message from client')
         client, address = s.accept()
         if not os.fork():   # enter child process
             time.sleep(1)   # exec task in 3 seconds
