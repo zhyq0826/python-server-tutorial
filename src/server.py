@@ -16,11 +16,11 @@ def main():
     s.listen(10)
     while 1:
         print_green(' waitting to recevie message from client')
-        client, address = s.accept()
+        connection, address = s.accept()
         time.sleep(1)
-        msg = client.recv(1024)
-        client.send(msg.capitalize())
-        client.close()
+        msg = connection.recv(1024)
+        connection.send(msg.capitalize())
+        connection.close()
 
 
 if __name__ == '__main__':
