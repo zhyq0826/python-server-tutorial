@@ -17,16 +17,16 @@ def main():
     s.listen(10)
     while 1:
         print_green(' waitting to recevie message from client')
-        client, address = s.accept()
+        connection, address = s.accept()
         if not os.fork():   # enter child process
             time.sleep(1)   # exec task in 3 seconds
-            msg = client.recv(1024)
+            msg = connection.recv(1024)
             print_red("child process")
-            client.send(msg.capitalize())
-            client.close()      # close client socket
+            connection.send(msg.capitalize())
+            connection.close()      # close client socket
             s.close()       # child does not need this
             break           # break child while loop
-        client.close()      # parent does not need this
+        connection.close()      # parent does not need this
 
 
 if __name__ == '__main__':
