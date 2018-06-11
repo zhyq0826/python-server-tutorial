@@ -77,6 +77,8 @@ def main():
                 outputs.remove(s)
             s.close()
 
+            del message_queues[s]
+
 
 if __name__ == '__main__':
     main()
