@@ -1,5 +1,7 @@
 select_server:
 	python select_server.py
+poll_server:
+	python poll_server.py
 server:
 	python server.py
 process_server:
