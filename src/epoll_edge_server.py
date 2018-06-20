@@ -69,7 +69,10 @@ def main():
                     data = ''
                     try:
                         while True:
-                            data += s.recv(1024)
+                            _data = s.recv(1024)
+                            if not _data:
+                                break
+                            data += _data
                     except socket.error:
                         pass
                     if data:

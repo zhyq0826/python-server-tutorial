@@ -4,6 +4,8 @@ poll_server:
 	python poll_server.py
 epoll_server:
 	python epoll_server.py
+epoll_edge_server:
+	python epoll_edge_server.py
 server:
 	python server.py
 process_server:
