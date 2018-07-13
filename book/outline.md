@@ -44,5 +44,15 @@ epoll同样只告知那些就绪的文件描述符，而且当我们调用epoll_
 另一个本质的改进在于epoll采用基于事件的就绪通知方式。在select/poll中，进程只有在调用一定的方法后，内核才对所有监视的文件描述符进行扫描，而epoll事先通过epoll_ctl()来注册一个文件描述符，一旦基于某个文件描述符就绪时，内核会采用类似callback的回调机制，迅速激活这个文件描述符，当进程调用epoll_wait()时便得到通知。
 
 
-## 使用 python epoll
+## 高性能服务器分析
+
+- tornado
+- gunicorn
+- libevent
+- libuv
+- nginx
+- java disruptor、false sharding、并发无锁、ring buffer
+- tcp_nodelay,nio
+- 内存池、对象池、数据结构
+- 磁盘尾部追加、LSM
 
