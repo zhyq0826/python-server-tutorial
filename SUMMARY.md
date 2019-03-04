@@ -8,10 +8,9 @@
 6. [IO 多路复用之 poll](book/ch06.md)
 7. [IO 多路复用之 select](book/ch07.md)
 8. [IO 多路复用之 epoll](book/ch08.md)
-9. [epoll 之水平触发和边缘触发](book/ch09.md)
-10. [select、poll、epoll 如何选择](book/ch10.md)
-11. [C10k 问题](book/ch11.md)
-12. [高性能 web server](book/ch12.md)
+9. [select、poll、epoll 如何选择](book/ch10.md)
+10. [C10k 问题](book/ch11.md)
+11. [高性能 web server](book/ch12.md)
 
 
 
