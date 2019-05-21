@@ -33,8 +33,8 @@ deploy:
 	git rm SUMMARY.md README.md
 	git rm -rf book src
 	cp -r _book/* .
-	git add gitbook book index.html search_plus_index.json
 	git rm Makefile
+	git add *
 	git commit -m"update"
 	git push origin gh-pages --force
 
