@@ -32,6 +32,8 @@ deploy:
 	git rm SUMMARY.md README.md
 	git rm -rf book src
 	copy _book/* .
+	git rm Makefile
+	git push origin gh-pages --force
 
 
 
