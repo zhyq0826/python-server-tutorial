@@ -26,6 +26,15 @@ install:
 	npm install gitbook-cli -g
 	gitbook install
 
+.PHONY: deploy
+deploy:
+	git check -b gh-pages
+	git rm SUMMARY.md README.md
+	git rm -rf book src
+	copy _book/* .
+
+
+
 .PHONY: clean
 clean:
 	rm -rf $(BOOK_OUTPUT)
