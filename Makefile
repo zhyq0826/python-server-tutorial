@@ -34,6 +34,7 @@ deploy:
 	git rm SUMMARY.md README.md
 	git rm -rf book src
 	cp -r _book/* .
+	rm -rf _book
 	git rm Makefile
 	git add *
 	git commit -m"update"
