@@ -28,7 +28,8 @@ install:
 
 .PHONY: deploy
 deploy:
-	git checkout gh-pages
+	git branch -rf gh-pages 
+	git checkout -b gh-pages
 	git rm SUMMARY.md README.md
 	git rm -rf book src
 	cp -r _book/* .
