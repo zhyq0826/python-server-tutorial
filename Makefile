@@ -1,4 +1,4 @@
-BOOK_NAME := kubernetes-handbook
+BOOK_NAME := python-server-tutorial
 BOOK_OUTPUT := _book
 
 .PHONY: build
