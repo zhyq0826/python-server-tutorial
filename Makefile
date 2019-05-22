@@ -32,11 +32,11 @@ deploy:
 	git branch -D gh-pages 
 	git checkout -b gh-pages
 	git rm SUMMARY.md README.md
-	git rm -rf book src
+	git rm -rf book src book.json
 	cp -r _book/* .
 	rm -rf _book
 	git rm Makefile
-	git add *
+	git add .
 	git commit -m"update"
 	git push origin gh-pages --force
 	git checkout master
