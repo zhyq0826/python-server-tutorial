@@ -39,6 +39,7 @@ deploy:
 	git add *
 	git commit -m"update"
 	git push origin gh-pages --force
+	git checkout master
 
 .PHONY: clean
 clean:
