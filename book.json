@@ -11,7 +11,8 @@
         "-lunr",
         "-search",
         "search-plus",
-        "tbfed-pagefooter"
+        "tbfed-pagefooter",
+        "ga"
     ],
     "pdf": {
         "toc": true,
@@ -35,6 +36,9 @@
           "copyright":"&copy 三月沙",
           "modify_label": "Updated at",
           "modify_format": "YYYY-MM-DD HH:mm:ss"
+        },
+        "ga": {
+            "token": "UA-79591400-1"
         }
     },
     "generator": "site"
