@@ -38,7 +38,8 @@
           "modify_format": "YYYY-MM-DD HH:mm:ss"
         },
         "ga": {
-            "token": "UA-56212296-1"
+            "token": "UA-56212296-1",
+            "configuration": "auto"
         }
     },
     "generator": "site"
