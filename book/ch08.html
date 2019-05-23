@@ -1,0 +1,539 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-cn" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>IO 多路复用之 epoll · Python Server Tutorial</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="三月沙">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-page-toc/page-toc.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ch09.html" />
+    
+    
+    <link rel="prev" href="ch07.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="輸入並搜尋" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="ch00.html">
+            
+                <a href="ch00.html">
+            
+                    
+                    写在开始之前
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="ch01.html">
+            
+                <a href="ch01.html">
+            
+                    
+                    基础概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.4" data-path="ch02.html">
+            
+                <a href="ch02.html">
+            
+                    
+                    最简单的 Web Server 模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="ch03.html">
+            
+                <a href="ch03.html">
+            
+                    
+                    多进程模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="ch04.html">
+            
+                <a href="ch04.html">
+            
+                    
+                    多线程模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="ch05.html">
+            
+                <a href="ch05.html">
+            
+                    
+                    IO 多路复用技术
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="ch06.html">
+            
+                <a href="ch06.html">
+            
+                    
+                    IO 多路复用之 poll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="ch07.html">
+            
+                <a href="ch07.html">
+            
+                    
+                    IO 多路复用之 select
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.10" data-path="ch08.html">
+            
+                <a href="ch08.html">
+            
+                    
+                    IO 多路复用之 epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="ch09.html">
+            
+                <a href="ch09.html">
+            
+                    
+                    select、poll、epoll 如何选择
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="ch10.html">
+            
+                <a href="ch10.html">
+            
+                    
+                    C10k 问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="ch11.html">
+            
+                <a href="ch11.html">
+            
+                    
+                    高性能 web server
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本書使用 GitBook 釋出
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >IO 多路复用之 epoll</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="8-io-&#x591A;&#x8DEF;&#x590D;&#x7528;&#x4E4B;-epoll">8. IO &#x591A;&#x8DEF;&#x590D;&#x7528;&#x4E4B; epoll</h2>
+<p>&#x524D;&#x9762;&#x4ECB;&#x7ECD;&#x4E86; select &#x548C; poll&#xFF0C;&#x8FD9;&#x4E00;&#x8282;&#x6211;&#x4EEC;&#x8BF4;&#x8BF4;&#x53E6;&#x4E00;&#x79CD; IO &#x591A;&#x8DEF;&#x590D;&#x7528;&#x6280;&#x672F; epoll&#x3002;</p>
+<h3 id="81-epoll-&#x662F;&#x4EC0;&#x4E48;">8.1 epoll &#x662F;&#x4EC0;&#x4E48;</h3>
+<p>epoll &#x662F;&#x7C7B;&#x4F3C;&#x4E8E; poll &#x7684;&#x53C8;&#x4E00;&#x4E2A; linux &#x63D0;&#x4F9B;&#x7684;&#x5185;&#x6838;&#x51FD;&#x6570;&#xFF0C;&#x6B63;&#x5982; poll &#x7684;&#x8BDE;&#x751F;&#x662F;&#x4E3A;&#x4E86;&#x5F25;&#x8865; poll &#x7684;&#x7F3A;&#x70B9;&#xFF0C;epoll &#x4E5F;&#x662F;&#x4E3A;&#x4E86; poll &#x7684;&#x7F3A;&#x70B9;&#x800C;&#x5B9E;&#x73B0;&#x7684;&#x3002;</p>
+<h3 id="82-&#x4F7F;&#x7528;-epoll">8.2 &#x4F7F;&#x7528; epoll</h3>
+<p>&#x540C;&#x4E4B;&#x524D;&#x4E00;&#x6837;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;&#x56DE;&#x663E;&#x670D;&#x52A1;&#xFF0C;&#x5728;&#x4F7F;&#x7528; epoll &#x4E4B;&#x524D;&#x9996;&#x5148;&#x521B;&#x5EFA; socket server &#x4EE5;&#x53CA;&#x5F00;&#x59CB;&#x4E3B;&#x5FAA;&#x73AF;&#x7684;&#x4E00;&#x4E9B;&#x51C6;&#x5907;&#x5DE5;&#x4F5C;&#xFF1A;</p>
+<pre><code class="lang-python">server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="hljs-number">1</span>)
+server.setblocking(<span class="hljs-number">0</span>)
+server_address = (<span class="hljs-string">&apos;localhost&apos;</span>, <span class="hljs-number">8000</span>)
+server.bind(server_address)
+server.listen(<span class="hljs-number">10</span>)
+message_queues = {}
+TIMEOUT = <span class="hljs-number">1</span>
+</code></pre>
+<p>&#x8FDB;&#x884C;&#x4E8B;&#x4EF6;&#x6CE8;&#x518C;&#x548C;&#x5F00;&#x542F;&#x4E3B;&#x5FAA;&#x73AF;&#xFF1A;</p>
+<pre><code class="lang-python">READ_ONLY = select.POLLIN | select.POLLPRI | select.POLLHUP | select.POLLERR
+READ_WRITE = READ_ONLY | select.POLLOUT
+poller = select.epoll()
+poller.register(server.fileno(), READ_ONLY)
+
+fd_to_socket = {server.fileno(): server}
+<span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+    events = poller.poll(TIMEOUT)
+    <span class="hljs-keyword">for</span> fd, flag <span class="hljs-keyword">in</span> events:
+        <span class="hljs-keyword">pass</span>
+</code></pre>
+<p>&#x53EF;&#x4EE5;&#x770B;&#x5230; epoll &#x51E0;&#x4E4E;&#x6709;&#x7740;&#x548C; poll &#x4E00;&#x6837;&#x7684; API&#xFF0C;&#x6709;&#x4E00;&#x70B9;&#x4E0D;&#x540C;&#x7684;&#x662F; epoll &#x652F;&#x6301;&#x7684;&#x4E8B;&#x4EF6;&#x66F4;&#x591A;&#xFF0C;&#x800C;&#x4E14; epoll &#x7684; timeout &#x662F;&#x4EE5;&#x79D2;&#x4E3A;&#x5355;&#x4F4D;&#x7684;&#xFF0C;poll &#x662F;&#x4EE5;&#x6BEB;&#x79D2;&#x4E3A;&#x5355;&#x4F4D;&#x7684;&#x3002;</p>
+<h3 id="82-&#x8BFB;&#x4E8B;&#x4EF6;-pollin-&#x548C;-pollpri">8.2 &#x8BFB;&#x4E8B;&#x4EF6; POLLIN &#x548C; POLLPRI</h3>
+<p>epoll &#x7684;&#x8BFB;&#x4E8B;&#x4EF6;&#x5BF9;&#x5E94;&#x7684;&#x662F; <strong>POLLIN</strong> &#x548C; <strong>POLLPRI</strong> &#xFF0C;&#x540C; poll &#x8BFB;&#x4E8B;&#x4EF6;&#x51E0;&#x4E4E;&#x4E00;&#x6837;&#xFF0C;&#x540C;&#x6837;&#x5904;&#x7406; epoll &#x8BFB;&#x4E8B;&#x4EF6;&#x4E3B;&#x8981;&#x6709;&#x4EE5;&#x4E0B;&#x51E0;&#x79CD;&#x60C5;&#x5F62;&#x3002;</p>
+<p><strong>&#x60C5;&#x5F62;&#x4E00;</strong></p>
+<p>&#x5982;&#x679C;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x662F; server&#xFF0C;&#x8BF4;&#x660E;&#x6709;&#x65B0;&#x7684;&#x8FDE;&#x63A5;&#x5230;&#x6765;&#xFF0C;&#x5728;&#x83B7;&#x53D6;&#x8FD9;&#x4E2A;&#x8FDE;&#x63A5;&#x4E4B;&#x540E;&#x9700;&#x8981;&#x628A;&#x65B0;&#x7684;&#x8FDE;&#x63A5;&#x901A;&#x8FC7; epoll &#x6765;&#x8FDB;&#x884C;&#x6CE8;&#x518C;&#xFF0C;&#x8FD9;&#x6837;&#x6211;&#x4EEC;&#x5C31;&#x53EF;&#x4EE5;&#x76D1;&#x542C;&#x65B0;&#x8FDE;&#x63A5;&#x7684;&#x4E8B;&#x4EF6;&#x4E86;&#xFF1A;</p>
+<pre><code class="lang-python">
+<span class="hljs-keyword">if</span> s <span class="hljs-keyword">is</span> server:
+    connection, client_address = s.accept()
+    connection.setblocking(<span class="hljs-number">0</span>)
+    fd_to_socket[ connection.fileno() ] = connection
+    poller.register(connection, READ_ONLY)
+    message_queues[connection] = Queue.Queue()
+</code></pre>
+<p><strong>&#x60C5;&#x5F62;&#x4E8C;</strong></p>
+<p>&#x5982;&#x679C;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x4E0D;&#x662F; server&#xFF0C;&#x8BF4;&#x660E;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x6709;&#x6570;&#x636E;&#x53EF;&#x8BFB;&#xFF0C;&#x6B64;&#x65F6;&#x6211;&#x4EEC;&#x53EF;&#x4EE5;&#x4F7F;&#x7528; <code>recv</code> &#x6765;&#x8BFB;&#x53D6;&#x6570;&#x636E;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-keyword">else</span>:
+    data = s.recv(<span class="hljs-number">1024</span>)
+    <span class="hljs-keyword">if</span> data:
+        message_queues[s].put(data.capitalize())
+        poller.modify(s, READ_WRITE)
+</code></pre>
+<p>&#x4E0E;&#x6B64;&#x540C;&#x65F6;&#xFF0C;&#x6211;&#x4EEC;&#x4E5F;&#x9700;&#x8981;&#x4FEE;&#x6539;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x9700;&#x8981;&#x88AB;&#x76D1;&#x542C;&#x7684;&#x4E8B;&#x4EF6;&#x7C7B;&#x578B;&#xFF0C;&#x5728;&#x8BFB;&#x5B8C;&#x6570;&#x636E;&#x4E4B;&#x540E;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x56DE;&#x663E;&#xFF0C;&#x56E0;&#x6B64;&#x4FEE;&#x6539;&#x4E8B;&#x4EF6;&#x7C7B;&#x578B;&#x4E3A; <code>READ_WRITE</code>&#x3002;</p>
+<p><strong>&#x60C5;&#x5F62;&#x4E09;</strong></p>
+<p>&#x5982;&#x679C;&#x8BFB;&#x53D6;&#x7684;&#x6570;&#x636E;&#x662F;&#x7A7A;&#x7684;&#xFF0C;&#x8BF4;&#x660E; client &#x5173;&#x95ED;&#x4E86;&#x8FD9;&#x4E2A;&#x8FDE;&#x63A5;&#xFF0C;&#x6211;&#x4EEC;&#x9700;&#x8981;&#x628A;&#x8FD9;&#x4E2A;&#x8FDE;&#x63A5;&#x4ECE; poll &#x7684;&#x6CE8;&#x518C;&#x5217;&#x8868;&#x4E2D;&#x79FB;&#x9664;&#xFF0C;&#x5E76;&#x4E14;&#x91CA;&#x653E;&#x5BF9;&#x5E94;&#x7684;&#x8D44;&#x6E90;&#xFF1A;</p>
+<pre><code class="lang-python">poller.unregister(s)
+s.close()
+
+<span class="hljs-comment"># Remove message queue</span>
+<span class="hljs-keyword">del</span> message_queues[s]
+</code></pre>
+<h3 id="83-&#x5199;&#x4E8B;&#x4EF6;-pollout">8.3 &#x5199;&#x4E8B;&#x4EF6; POLLOUT</h3>
+<p>&#x5BF9;&#x6709;&#x5199;&#x4E8B;&#x4EF6;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x5904;&#x7406;&#x548C; poll &#x4E00;&#x6837;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-keyword">elif</span> flag &amp; select.POLLOUT:
+    <span class="hljs-keyword">try</span>:
+        next_msg = message_queues[s].get_nowait()
+    <span class="hljs-keyword">except</span> Queue.Empty:
+        poller.modify(s, READ_ONLY)
+    <span class="hljs-keyword">else</span>:
+        s.send(next_msg)
+</code></pre>
+<h3 id="84-&#x5F02;&#x5E38;&#x5904;&#x7406;-pollhup-&#x548C;-pollerr">8.4 &#x5F02;&#x5E38;&#x5904;&#x7406; POLLHUP &#x548C; POLLERR</h3>
+<p><code>POLLHUP</code> &#x8BF4;&#x660E; client &#x6CA1;&#x6709;&#x6B63;&#x786E;&#x5173;&#x95ED;&#x8FDE;&#x63A5;&#xFF0C;<code>POLLERR</code> &#x8BF4;&#x660E;&#x6709;&#x9519;&#x8BEF;&#x53D1;&#x751F;&#xFF0C;&#x8FD9;&#x4E24;&#x79CD;&#x60C5;&#x5F62;&#x6211;&#x4EEC;&#x9009;&#x62E9;&#x53D6;&#x6D88;&#x5BF9;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x76D1;&#x542C;&#xFF0C;&#x5E76;&#x4E14;&#x91CA;&#x653E;&#x8D44;&#x6E90;&#xFF1A;</p>
+<pre><code class="lang-python">poller.unregister(s)
+s.close()
+
+<span class="hljs-comment"># Remove message queue</span>
+<span class="hljs-keyword">del</span> message_queues[s]
+</code></pre>
+<p>&#x5728;&#x4ECB;&#x7ECD;&#x5B8C; epoll &#x7684;&#x57FA;&#x672C;&#x4F7F;&#x7528;&#xFF0C;&#x6211;&#x4EEC;&#x518D;&#x8BF4;&#x8BF4; epoll &#x7684;&#x4E24;&#x79CD;&#x6267;&#x884C;&#x6A21;&#x5F0F;&#x3002;</p>
+<h3 id="85-epoll-&#x7684;&#x6C34;&#x5E73;&#x89E6;&#x53D1;&#x548C;&#x8FB9;&#x7F18;&#x89E6;&#x53D1;">8.5 epoll &#x7684;&#x6C34;&#x5E73;&#x89E6;&#x53D1;&#x548C;&#x8FB9;&#x7F18;&#x89E6;&#x53D1;</h3>
+<p>epoll &#x6709;&#x4E24;&#x79CD;&#x6267;&#x884C;&#x6A21;&#x5F0F;&#xFF0C;&#x4E00;&#x79CD;&#x662F;&#x6C34;&#x5E73;&#x89E6;&#x53D1;&#xFF08;level-triggered&#xFF09;&#xFF0C;&#x4E00;&#x79CD;&#x662F;&#x8FB9;&#x7F18;&#x89E6;&#x53D1;&#xFF08;edge-triggered&#xFF09;&#xFF0C;&#x9ED8;&#x8BA4;&#x662F;&#x6C34;&#x5E73;&#x89E6;&#x53D1;&#x3002;</p>
+<h4 id="851-&#x6C34;&#x5E73;&#x89E6;&#x53D1;">8.5.1 &#x6C34;&#x5E73;&#x89E6;&#x53D1;</h4>
+<p>level-triggered &#x610F;&#x601D;&#x662F;&#x5982;&#x679C;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x5C31;&#x7EEA;&#x4E86;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x6709;&#x4E8B;&#x4EF6;&#x51C6;&#x5907;&#x8BFB;&#x6216;&#x51C6;&#x5907;&#x5199;&#xFF0C;&#x8C03;&#x7528; epoll &#x4E4B;&#x540E;&#x5185;&#x6838;&#x4F1A;&#x628A;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x4ECE;&#x5185;&#x6838;&#x62F7;&#x8D1D;&#x5230;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#xFF0C;&#x5E76;&#x901A;&#x77E5;&#x7528;&#x6237;&#x5BF9;&#x5E94;&#x7684;&#x4E8B;&#x4EF6;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x6237;&#x6B64;&#x65F6;&#x9009;&#x62E9;&#x4E0D;&#x5904;&#x7406;&#x8BE5;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x4E8B;&#x4EF6;&#xFF0C;&#x5373;&#x7528;&#x6237;&#x4E0D;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x8BFB;&#x6216;&#x4E0D;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x5199;&#xFF0C;&#x4E0B;&#x6B21;&#x8C03;&#x7528; epoll &#x65F6;&#xFF0C;&#x5185;&#x6838;&#x4F9D;&#x7136;&#x4F1A;&#x8FD4;&#x56DE;&#x8FD9;&#x4E2A;&#x4E8B;&#x4EF6;&#x3002;</p>
+<p><img src="imgs/level-triggered.jpg" alt=""></p>
+<p>&#x5982;&#x56FE;&#x6240;&#x793A;&#x4E0D;&#x8BBA; epoll &#x8C03;&#x7528;&#x591A;&#x5C11;&#x6B21;&#xFF0C;&#x53EA;&#x8981;&#x4E8B;&#x4EF6; event2 &#x5C31;&#x7EEA;&#xFF0C;&#x5185;&#x6838;&#x603B;&#x662F;&#x4F1A;&#x628A;&#x4E8B;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x8FD4;&#x56DE;&#x7ED9;&#x7528;&#x6237;&#x3002;</p>
+<h4 id="852-&#x8FB9;&#x7F18;&#x89E6;&#x53D1;">8.5.2 &#x8FB9;&#x7F18;&#x89E6;&#x53D1;</h4>
+<p>edge-triggered &#x610F;&#x601D;&#x662F;&#x5982;&#x4F55;&#x4E00;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x5C31;&#x7EEA;&#x4E86;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x6709;&#x4E8B;&#x4EF6;&#x51C6;&#x5907;&#x8BFB;&#x6216;&#x51C6;&#x5907;&#x5199;&#xFF0C;&#x8C03;&#x7528; epoll &#x4E4B;&#x540E;&#x5185;&#x6838;&#x4F1A;&#x628A;&#x8FD9;&#x4E2A;&#x6587;&#x4EF6;&#x63CF;&#x8FF0;&#x7B26;&#x4ECE;&#x5185;&#x6838;&#x62F7;&#x8D1D;&#x5230;&#x7528;&#x6237;&#x7A7A;&#x95F4;&#xFF0C;&#x5E76;&#x901A;&#x77E5;&#x7528;&#x6237;&#x5BF9;&#x5E94;&#x7684;&#x4E8B;&#x4EF6;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x6237;&#x9009;&#x62E9;&#x4E0D;&#x5904;&#x7406;&#x8BE5;&#x63CF;&#x8FF0;&#x7B26;&#x7684;&#x4E8B;&#x4EF6;&#xFF0C;&#x5373;&#x7528;&#x6237;&#x4E0D;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x8BFB;&#x6216;&#x4E0D;&#x8FDB;&#x884C;&#x6570;&#x636E;&#x5199;&#xFF0C;&#x4E0B;&#x6B21;&#x8C03;&#x7528; epoll &#x65F6;&#xFF0C;&#x5185;&#x6838;&#x4E0D;&#x4F1A;&#x518D;&#x8FD4;&#x56DE;&#x8FD9;&#x4E2A;&#x4E8B;&#x4EF6;&#xFF0C;&#x9664;&#x975E;&#x628A;&#x5BF9;&#x5E94;&#x7684;&#x4E8B;&#x4EF6;&#x91CD;&#x65B0;&#x6FC0;&#x6D3B;&#xFF0C;&#x5185;&#x6838;&#x624D;&#x4F1A;&#x5728;&#x4E0B;&#x6B21;&#x8C03;&#x7528;&#x4E2D;&#x8FD4;&#x56DE;&#x8BE5;&#x4E8B;&#x4EF6;&#x3002;</p>
+<p><img src="imgs/edge-triggered.jpg" alt=""></p>
+<p>&#x7B2C;&#x4E8C;&#x6B21;&#x8C03;&#x7528; epoll &#x4E0D;&#x4F1A;&#x8FD4;&#x56DE;&#x5DF2;&#x7ECF;&#x8FD4;&#x56DE;&#x8FC7;&#x7684;&#x4E8B;&#x4EF6; event2&#x3002;</p>
+<h3 id="86-&#x4E24;&#x79CD;&#x89E6;&#x53D1;&#x6A21;&#x5F0F;&#x7684;&#x5DEE;&#x5F02;">8.6 &#x4E24;&#x79CD;&#x89E6;&#x53D1;&#x6A21;&#x5F0F;&#x7684;&#x5DEE;&#x5F02;</h3>
+<p>level-triggered &#x63CF;&#x8FF0;&#x7684;&#x662F;&#x4E00;&#x79CD;&#x72B6;&#x6001;&#xFF0C;&#x4E00;&#x79CD;&#x5B58;&#x5728; present&#xFF0C;&#x5373;&#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x4E86;&#x8FD9;&#x4E00;&#x79CD;&#x72B6;&#x6001;&#xFF0C;&#x53EA;&#x8981;&#x8FD9;&#x4E2A;&#x72B6;&#x6001;&#x4E00;&#x76F4;&#x5B58;&#x5728;&#xFF0C;&#x5185;&#x6838;&#x5C31;&#x4F1A;&#x4E00;&#x76F4;&#x4E0D;&#x65AD;&#x7684;&#x5904;&#x7406;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x540C;&#x4E00;&#x4E2A;&#x4E8B;&#x4EF6;&#x53EF;&#x80FD;&#x4F1A;&#x88AB;&#x5185;&#x6838;&#x53CD;&#x590D;&#x62F7;&#x8D1D;&#x3002;</p>
+<p>edge-triggered &#x63CF;&#x8FF0;&#x7684;&#x662F;&#x4E00;&#x4E2A;&#x4E8B;&#x4EF6;&#xFF0C;&#x4E00;&#x4E2A;&#x53D1;&#x751F;&#x7684;&#x4E8B;&#x4EF6; event&#xFF0C;&#x5373;&#x4E8B;&#x4EF6;&#x4ECE;&#x65E0;&#x5230;&#x6709;&#x8FD9;&#x4E00;&#x72B6;&#x6001;&#x7684;&#x6539;&#x53D8;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x53D1;&#x751F;&#x4E86;&#x8FD9;&#x4EF6;&#x4E8B;&#xFF0C;&#x6B64;&#x65F6;&#x5185;&#x6838;&#x624D;&#x4F1A;&#x62F7;&#x8D1D;&#x8FD9;&#x4E2A;&#x4E8B;&#x4EF6;&#xFF0C;&#x5982;&#x679C;&#x7528;&#x6237;&#x6CA1;&#x6709;&#x5904;&#x7406;&#xFF0C;&#x63A5;&#x4E0B;&#x6765;&#x5185;&#x6838;&#x4E0D;&#x4F1A;&#x518D;&#x6B21;&#x8FDB;&#x884C;&#x62F7;&#x8D1D;&#xFF0C;&#x5373;&#x4F7F;&#x8FD9;&#x4E2A;&#x4E8B;&#x4EF6;&#x5728;&#x5185;&#x6838;&#x4E2D;&#x5B58;&#x5728;&#xFF0C;&#x4F46;&#x662F;&#x8FD9;&#x4E2A;&#x4E8B;&#x4EF6;&#x5DF2;&#x7ECF;&#x53D1;&#x751F;&#x8FC7;&#x4E86;&#x3002;</p>
+<p>level-triggered &#x6A21;&#x5F0F;&#x662F;&#x5C3D;&#x53EF;&#x80FD;&#x7684;&#x8BA9;&#x4E8B;&#x4EF6;&#x88AB;&#x7528;&#x6237;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x611F;&#x77E5;&#x5230;&#xFF0C;&#x800C; edge-triggered &#x53EF;&#x80FD;&#x7684;&#x95EE;&#x9898;&#x662F;&#x4E5F;&#x8BB8;&#x4F1A;&#x4F1A;&#x8BA9;&#x7528;&#x6237;&#x5E94;&#x7528;&#x7A0B;&#x5E8F;&#x9519;&#x8FC7;&#x67D0;&#x4E9B;&#x4E8B;&#x4EF6;&#xFF0C;&#x56E0;&#x4E3A;&#x5B83;&#x53EA;&#x5728;&#x4E8B;&#x4EF6;&#x53D1;&#x751F;&#x7684;&#x90A3;&#x4E00;&#x523B;&#x624D;&#x4F1A;&#x901A;&#x77E5;&#x7528;&#x6237;&#x3002;</p>
+<p>edge-triggered &#x66F4;&#x9AD8;&#x6548;&#xFF0C;&#x4F46;&#x662F; level-triggered &#x66F4;&#x53EF;&#x9760;&#x3002;</p>
+<h3 id="87-&#x8FB9;&#x7F18;&#x89E6;&#x53D1;&#x7684;&#x4F7F;&#x7528;">8.7 &#x8FB9;&#x7F18;&#x89E6;&#x53D1;&#x7684;&#x4F7F;&#x7528;</h3>
+<p>epoll &#x9ED8;&#x8BA4;&#x662F; level-triggered&#xFF0C;&#x5982;&#x679C;&#x9700;&#x8981;&#x4F7F;&#x7528; edge-triggered &#x9700;&#x8981;&#x66F4;&#x6539;&#x6CE8;&#x518C;&#x4E8B;&#x4EF6;&#x7C7B;&#x578B;&#x4EE5;&#x53CA;&#x5904;&#x7406;&#x4E8B;&#x4EF6;&#x7684;&#x65B9;&#x5F0F;&#x3002;</p>
+<p>&#x9996;&#x5148;&#x9700;&#x6C42;&#x4FEE;&#x6539;&#x6CE8;&#x518C;&#x4E8B;&#x4EF6;&#x7C7B;&#x578B;&#xFF1A;</p>
+<pre><code class="lang-python">
+poller.register(server.fileno(), READ_ONLY | select.EPOLLET)
+</code></pre>
+<p>&#x5176;&#x6B21;&#x5728;&#x9700;&#x8981;&#x5904;&#x7406;&#x4E8B;&#x4EF6;&#x65F6;&#x6211;&#x4EEC;&#x5FC5;&#x987B;&#x4E00;&#x6B21;&#x6027;&#x5168;&#x90E8;&#x5904;&#x7406;&#x5B8C;&#x6210;&#xFF0C;accept &#x5904;&#x7406;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+        connection, client_address = s.accept()
+        connection.setblocking(<span class="hljs-number">0</span>)
+        fd_to_socket[connection.fileno()] = connection
+        poller.register(connection.fileno(), READ_ONLY)
+
+        <span class="hljs-comment"># Give the connection a queue for data we want to send</span>
+        message_queues[connection] = Queue.Queue()
+        print_red(<span class="hljs-string">&apos; connection {0} is comming ==&gt; &apos;</span>.format(
+            connection.getpeername()))
+    <span class="hljs-keyword">pass</span>
+<span class="hljs-keyword">except</span> socket.error:
+    <span class="hljs-keyword">pass</span>
+</code></pre>
+<p>&#x8BFB;&#x53D6;&#x6570;&#x636E;&#xFF1A;</p>
+<pre><code class="lang-python">data = <span class="hljs-string">&apos;&apos;</span>
+<span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">while</span> <span class="hljs-keyword">True</span>:
+        _data = s.recv(<span class="hljs-number">1024</span>)
+        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> _data:
+            <span class="hljs-keyword">break</span>
+        data += _data
+<span class="hljs-keyword">except</span> socket.error:
+    <span class="hljs-keyword">pass</span>
+</code></pre>
+<p>&#x53D1;&#x9001;&#x6570;&#x636E;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-keyword">try</span>:
+    <span class="hljs-keyword">while</span> next_msg:
+        bytelength = s.send(next_msg)
+        next_msg = next_msg[bytelength:]
+<span class="hljs-keyword">except</span> socket.error:
+    <span class="hljs-keyword">pass</span>
+</code></pre>
+<footer class="page-footer"><span class="copyright">&#xA9; &#x4E09;&#x6708;&#x6C99; all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">Updated at
+2019-05-23 11:02:59
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ch07.html" class="navigation navigation-prev " aria-label="Previous page: IO 多路复用之 select">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ch09.html" class="navigation navigation-next " aria-label="Next page: select、poll、epoll 如何选择">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"IO 多路复用之 epoll","level":"1.10","depth":1,"next":{"title":"select、poll、epoll 如何选择","level":"1.11","depth":1,"path":"book/ch09.md","ref":"book/ch09.md","articles":[]},"previous":{"title":"IO 多路复用之 select","level":"1.9","depth":1,"path":"book/ch07.md","ref":"book/ch07.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mermaid","github","editlink","page-toc","-lunr","-search","search-plus","tbfed-pagefooter","ga"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"&copy 三月沙","modify_label":"Updated at","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/zhyq0826/python-server-tutorial"},"editlink":{"label":"编辑本页","multilingual":false,"base":"https://github.com/zhyq0826/python-server-tutorial/blob/master"},"mermaid":{},"page-toc":{"position":"before-first","selector":".markdown-section h1, .markdown-section h2, .markdown-section h3","showByDefault":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"ga":{"configuration":"auto","token":"UA-56212296-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"search-plus":{}},"theme":"default","author":"三月沙","pdf":{"pageNumbers":true,"fontSize":11,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"toc":true},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Python Server Tutorial","language":"zh-cn","gitbook":">= 3.2.2"},"file":{"path":"book/ch08.md","mtime":"2019-05-23T03:02:59.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-23T11:40:44.706Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-editlink/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-page-toc/anchor-3.1.1.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-page-toc/page-toc.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+

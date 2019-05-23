@@ -1,0 +1,466 @@
+
+<!DOCTYPE HTML>
+<html lang="zh-cn" >
+    <head>
+        <meta charset="UTF-8">
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <title>最简单的 Web Server 模型 · Python Server Tutorial</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 3.2.3">
+        <meta name="author" content="三月沙">
+        
+        
+    
+    <link rel="stylesheet" href="../gitbook/style.css">
+
+    
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-page-toc/page-toc.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-search-plus/search.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-tbfed-pagefooter/footer.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-highlight/website.css">
+                
+            
+                
+                <link rel="stylesheet" href="../gitbook/gitbook-plugin-fontsettings/website.css">
+                
+            
+        
+
+    
+
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+        
+    
+    
+    <meta name="HandheldFriendly" content="true"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
+    <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
+
+    
+    <link rel="next" href="ch03.html" />
+    
+    
+    <link rel="prev" href="ch01.html" />
+    
+
+    </head>
+    <body>
+        
+<div class="book">
+    <div class="book-summary">
+        
+            
+<div id="book-search-input" role="search">
+    <input type="text" placeholder="輸入並搜尋" />
+</div>
+
+            
+                <nav role="navigation">
+                
+
+
+<ul class="summary">
+    
+    
+
+    
+
+    
+        
+        
+    
+        <li class="chapter " data-level="1.1" data-path="../">
+            
+                <a href="../">
+            
+                    
+                    Introduction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.2" data-path="ch00.html">
+            
+                <a href="ch00.html">
+            
+                    
+                    写在开始之前
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.3" data-path="ch01.html">
+            
+                <a href="ch01.html">
+            
+                    
+                    基础概念
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter active" data-level="1.4" data-path="ch02.html">
+            
+                <a href="ch02.html">
+            
+                    
+                    最简单的 Web Server 模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.5" data-path="ch03.html">
+            
+                <a href="ch03.html">
+            
+                    
+                    多进程模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.6" data-path="ch04.html">
+            
+                <a href="ch04.html">
+            
+                    
+                    多线程模型
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.7" data-path="ch05.html">
+            
+                <a href="ch05.html">
+            
+                    
+                    IO 多路复用技术
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.8" data-path="ch06.html">
+            
+                <a href="ch06.html">
+            
+                    
+                    IO 多路复用之 poll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.9" data-path="ch07.html">
+            
+                <a href="ch07.html">
+            
+                    
+                    IO 多路复用之 select
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.10" data-path="ch08.html">
+            
+                <a href="ch08.html">
+            
+                    
+                    IO 多路复用之 epoll
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.11" data-path="ch09.html">
+            
+                <a href="ch09.html">
+            
+                    
+                    select、poll、epoll 如何选择
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.12" data-path="ch10.html">
+            
+                <a href="ch10.html">
+            
+                    
+                    C10k 问题
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="1.13" data-path="ch11.html">
+            
+                <a href="ch11.html">
+            
+                    
+                    高性能 web server
+            
+                </a>
+            
+
+            
+        </li>
+    
+
+    
+
+    <li class="divider"></li>
+
+    <li>
+        <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+            本書使用 GitBook 釋出
+        </a>
+    </li>
+</ul>
+
+
+                </nav>
+            
+        
+    </div>
+
+    <div class="book-body">
+        
+            <div class="body-inner">
+                
+                    
+
+<div class="book-header" role="navigation">
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href=".." >最简单的 Web Server 模型</a>
+    </h1>
+</div>
+
+
+
+
+                    <div class="page-wrapper" tabindex="-1" role="main">
+                        <div class="page-inner">
+                            
+<div class="search-plus" id="book-search-results">
+    <div class="search-noresults">
+    
+                                <section class="normal markdown-section">
+                                
+                                <h2 id="2-&#x6700;&#x7B80;&#x5355;&#x7684;-web-server-&#x6A21;&#x578B;">2. &#x6700;&#x7B80;&#x5355;&#x7684; Web Server &#x6A21;&#x578B;</h2>
+<p>Client-Server &#x662F;&#x4E92;&#x8054;&#x7F51;&#x4E0A;&#x4F7F;&#x7528;&#x6700;&#x666E;&#x904D;&#x7684; Web &#x6A21;&#x578B;&#xFF1A;</p>
+<p><img src="imgs/client-server_model_1253.png" alt=""></p>
+<p>&#x800C;&#x9690;&#x85CF;&#x5728;&#x8FD9;&#x4E2A;&#x6A21;&#x578B;&#x4E4B;&#x540E;&#x7684;&#x5E95;&#x5C42;&#x5B9E;&#x73B0;&#x5C31;&#x662F;&#x8FDB;&#x7A0B;&#x4E4B;&#x95F4;&#x901A;&#x8FC7; socket &#x8FDB;&#x884C;&#x901A;&#x4FE1;&#xFF0C;&#x4E3A;&#x4E86;&#x7B80;&#x5316;&#x6211;&#x4EEC;&#x7684;&#x63CF;&#x8FF0;&#xFF0C;&#x8FD9;&#x91CC;&#x6211;&#x4EEC;&#x5047;&#x8BBE;&#x53EA;&#x6709;&#x4E00;&#x4E2A; client &#x548C;&#x4E00;&#x4E2A; server &#x7684;&#x60C5;&#x5F62;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x8BF4; server &#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x5B58;&#x5728;&#xFF0C;client &#x4E5F;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x5B58;&#x5728;&#xFF0C;&#x90A3;&#x4E48;&#x5982;&#x4F55;&#x5F00;&#x542F;&#x4E24;&#x4E2A;&#x8FDB;&#x7A0B; client &#x548C; server &#x7684;&#x901A;&#x4FE1;&#xFF1F;</p>
+<h3 id="21-server-&#x7AEF;&#x7684;-socket">2.1 server &#x7AEF;&#x7684; socket</h3>
+<p>Server &#x7AEF;&#x7684; socket &#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;&#x6BD4; client &#x7AEF;&#x8981;&#x590D;&#x6742;&#x5F88;&#x591A;&#xFF0C;&#x4F46;&#x662F;&#x4E00;&#x822C;&#x7684;&#x5904;&#x7406;&#x8FC7;&#x7A0B;&#x90FD;&#x53EF;&#x4EE5;&#x5206;&#x4E3A;&#x5982;&#x4E0B;&#x51E0;&#x6B65;&#xFF1A;</p>
+<p><img src="imgs/server-socket.jpg" alt=""></p>
+<p><strong>&#x58F0;&#x660E; server &#x7684; socket &#x7C7B;&#x578B;</strong></p>
+<pre><code class="lang-python">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+</code></pre>
+<p>&#x9996;&#x5148;&#x6839;&#x636E; server &#x7684;&#x7C7B;&#x578B;(TCP/UDP)&#x58F0;&#x660E;&#x5BF9;&#x5E94;&#x7684; socket&#xFF0C;<code>SOCK_STREAM</code> &#x8868;&#x793A; TCP &#x534F;&#x8BAE;&#x3002;</p>
+<p><strong>&#x7ED1;&#x5B9A;&#x5230;&#x6307;&#x5B9A;&#x7684; ip &#x548C; port</strong></p>
+<pre><code class="lang-python">server_address = (<span class="hljs-string">&apos;localhost&apos;</span>, <span class="hljs-number">8000</span>)
+s.bind(server_address)
+</code></pre>
+<p>&#x628A;&#x58F0;&#x660E;&#x7684; socket bind &#x5230;&#x6307;&#x5B9A;&#x7684; ip &#x548C;&#x7AEF;&#x53E3;&#xFF0C;&#x5728;&#x6B64;&#x8BFB;&#x8005;&#x53EA;&#x9700;&#x8981;&#x77E5;&#x9053;&#x4E00;&#x4E2A; socket &#x662F;&#x7531;&#x5176;&#x7ED1;&#x5B9A;&#x7684; ip &#x548C; port &#x552F;&#x4E00;&#x786E;&#x5B9A;&#x7684;&#xFF0C;&#x800C;&#x4E00;&#x4E2A;&#x5B8C;&#x6574;&#x7684; socket &#x901A;&#x4FE1;&#x53C8;&#x662F;&#x7531; client &#x7684; (client_ip, client_port) &#x4EE5;&#x53CA; server &#x7684; (server_ip, server_port) &#x552F;&#x4E00;&#x786E;&#x5B9A;&#x7684;&#x3002;</p>
+<p><strong>&#x8FDB;&#x884C;&#x7AEF;&#x53E3;&#x4FA6;&#x542C;</strong></p>
+<pre><code class="lang-python">s.listen()
+</code></pre>
+<p>&#x544A;&#x8BC9;&#x64CD;&#x4F5C;&#x7CFB;&#x7EDF;&#x8FD9;&#x4E2A;&#x8FDB;&#x7A0B;&#x5F00;&#x59CB;&#x76D1;&#x542C;&#x6765;&#x81EA;&#x7ED1;&#x5B9A; ip &#x548C; port &#x7684;&#x8BF7;&#x6C42;&#x3002;</p>
+<p><strong>&#x63A5;&#x53D7; client &#x7684;&#x8BF7;&#x6C42;&#x8FDB;&#x884C;&#x5904;&#x7406;</strong></p>
+<pre><code class="lang-python">client, address = s.accept()
+</code></pre>
+<p>&#x5B8C;&#x6574;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-comment"># server.py</span>
+<span class="hljs-comment"># create tcp server</span>
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+<span class="hljs-comment"># enable reuse address port</span>
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, <span class="hljs-number">1</span>)
+<span class="hljs-comment"># bind socket to the port</span>
+server_address = (<span class="hljs-string">&apos;localhost&apos;</span>, <span class="hljs-number">8000</span>)
+s.bind(server_address)
+s.listen(backlog)
+<span class="hljs-keyword">while</span> <span class="hljs-number">1</span>:
+    print(<span class="hljs-string">&apos;waitting to recevie message from client&apos;</span>)
+    connection, address = s.accept()
+    data = connection.recv(<span class="hljs-number">1024</span>)
+    print(data)
+</code></pre>
+<h3 id="22-client-&#x7AEF;&#x7684;-socket">2.2 Client &#x7AEF;&#x7684; socket</h3>
+<p>Client &#x7684; socket &#x6BD4;&#x8F83;&#x7B80;&#x5355;&#xFF0C;&#x9996;&#x5148;&#x6839;&#x636E;&#x9700;&#x8981; socket &#x7684;&#x7C7B;&#x578B;&#x521B;&#x5EFA; socket&#xFF0C;&#x7136;&#x540E; connect &#x5230; server &#x5373;&#x53EF;&#xFF1A;</p>
+<p><img src="imgs/client-socket.jpg" alt=""></p>
+<p>&#x5B8C;&#x6574;&#x4EE3;&#x7801;&#x5982;&#x4E0B;&#xFF1A;</p>
+<pre><code class="lang-python"><span class="hljs-comment"># client.py</span>
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = (<span class="hljs-string">&apos;localhost&apos;</span>, <span class="hljs-number">8000</span>)
+<span class="hljs-keyword">print</span> <span class="hljs-string">&apos;connect to server {0}&apos;</span>.format(server_address)
+s.connect(server_address)
+s.send(<span class="hljs-string">&apos;data&apos;</span>)
+</code></pre>
+<h3 id="23-server-&#x662F;&#x5982;&#x4F55;&#x5904;&#x7406;&#x6765;&#x81EA;-client-&#x8FDE;&#x63A5;">2.3 Server &#x662F;&#x5982;&#x4F55;&#x5904;&#x7406;&#x6765;&#x81EA; Client &#x8FDE;&#x63A5;</h3>
+<p>&#x5728; server socket &#x5F00;&#x59CB; accept &#x4E4B;&#x540E;&#xFF0C;&#x5982;&#x679C;&#x6709;&#x65B0;&#x7684; client &#x8FDE;&#x63A5;&#x8FDB;&#x6765;&#xFF0C;accept &#x4F1A;&#x8FD4;&#x56DE;&#x4E00;&#x4E2A;&#x65B0;&#x7684; socket&#xFF0C;&#x5728;&#x8FD9;&#x91CC;&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x548C;&#x6211;&#x4EEC;&#x4E4B;&#x524D;&#x521B;&#x5EFA;&#x7684; socket &#x5BF9;&#x8C61; <code>s</code> &#x4EA7;&#x751F;&#x6B67;&#x4E49;&#xFF0C;&#x6211;&#x4EEC;&#x79F0;&#x4E4B;&#x4E3A;&#x4E00;&#x4E2A; <code>connection</code>&#x3002;</p>
+<p><strong>&#x8FD9;&#x4E2A; connection &#x542B;&#x4E49;&#x662F;&#x4EC0;&#x4E48;&#xFF1F;</strong></p>
+<p>&#x51C6;&#x786E;&#x7684;&#x8BF4;&#x5B83;&#x662F;&#x4E00;&#x4E2A; server socket &#x548C; client socket &#x7684;&#x8FDE;&#x63A5;&#x901A;&#x9053;&#xFF0C;&#x7531; 
+<code>(server_ip, server_port, client_ip, client_port , protocol)</code> &#x552F;&#x4E00;&#x6807;&#x8BC6;&#x7684;&#x4E00;&#x4E2A;&#x7279;&#x6B8A;&#x7684; socket&#xFF0C;&#x5728;&#x8FD9;&#x91CC; protocol &#x662F;&#x6211;&#x4EEC;&#x5728;&#x521B;&#x5EFA; socket &#x65F6;&#x4F7F;&#x7528;&#x7684; socket &#x7C7B;&#x578B;&#xFF0C;&#x5728;&#x4E0A;&#x6587;&#x7684;&#x4EE3;&#x7801;&#x4E2D;&#x7528; <code>socket.SOCK_STREAM</code> &#x8868;&#x793A;&#xFF0C;&#x610F;&#x601D;&#x662F; TCP &#x534F;&#x8BAE;&#x7C7B;&#x578B;&#x7684; socket&#x3002;</p>
+<p>&#x901A;&#x8FC7;&#x8FD9;&#x4E2A; connection&#xFF0C;client &#x548C; server &#x5C31;&#x80FD;&#x76F8;&#x4E92;&#x901A;&#x4FE1;&#x548C;&#x4F20;&#x8F93;&#x6570;&#x636E;&#xFF0C;&#x8FD9;&#x5C31;&#x662F;&#x6700;&#x7B80;&#x5355;&#x7684;&#x8FDB;&#x7A0B;&#x95F4;&#x7684;&#x901A;&#x4FE1;&#x3002;</p>
+<h3 id="24-&#x8FD9;&#x4E2A;&#x6700;&#x7B80;&#x5355;&#x7684;&#x6A21;&#x578B;&#x6709;&#x4EC0;&#x4E48;&#x95EE;&#x9898;">2.4 &#x8FD9;&#x4E2A;&#x6700;&#x7B80;&#x5355;&#x7684;&#x6A21;&#x578B;&#x6709;&#x4EC0;&#x4E48;&#x95EE;&#x9898;</h3>
+<p>&#x5728;&#x4E0A;&#x6587;&#x7684;&#x6A21;&#x578B;&#x4E2D;&#xFF0C;server &#x8FDB;&#x7A0B;&#x901A;&#x8FC7;&#x76D1;&#x542C;&#x7AEF;&#x53E3;&#x4E0E;&#x5916;&#x754C; client &#x8FDB;&#x7A0B;&#x4EA4;&#x6D41;&#x7684;&#x8FC7;&#x7A0B;&#x662F;&#x963B;&#x585E;&#x7684;&#xFF0C;&#x800C;&#x4E14;&#x4E00;&#x6B21;&#x53EA;&#x80FD;&#x5904;&#x7406;&#x548C;&#x4E00;&#x4E2A; client &#x7684;&#x5BF9;&#x8BDD;&#xFF0C;&#x5904;&#x7406;&#x5B8C;&#x4E4B;&#x540E;&#x624D;&#x80FD;&#x53BB;&#x5904;&#x7406;&#x4E0B;&#x4E00;&#x4E2A;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x5B83;&#x7684;&#x5E76;&#x53D1;&#x5904;&#x7406;&#x80FD;&#x529B;&#x662F; 1&#xFF0C;&#x53EA;&#x8981;&#x6709;&#x4E00;&#x4E2A; client &#x548C;&#x5B83;&#x5EFA;&#x7ACB;&#x4E86; connection&#xFF0C;&#x5176;&#x5B83;&#x7684; client &#x5C31;&#x9700;&#x8981;&#x7B49;&#x5F85;&#x3002;</p>
+<p>&#x4E3A;&#x4EC0;&#x4E48;&#x662F;&#x8FD9;&#x6837;&#x7684;&#xFF1F;&#x56E0;&#x4E3A;&#x53EA;&#x6709;&#x4E00;&#x4E2A;&#x8FDB;&#x7A0B;&#x5728;&#x5DE5;&#x4F5C;&#xFF0C;&#x5B83;&#x65E2;&#x9700;&#x8981;&#x76D1;&#x542C;&#x65B0;&#x7684; connection &#xFF0C;&#x53C8;&#x9700;&#x8981;&#x5904;&#x7406;&#x5DF2;&#x7ECF;&#x5EFA;&#x7ACB;&#x8FDE;&#x63A5;&#x7684; connection &#x3002;&#x90A3;&#x5982;&#x4F55;&#x63D0;&#x9AD8;&#x5B83;&#x7684;&#x5E76;&#x53D1;&#x5904;&#x7406;&#x80FD;&#x529B;&#x5462;&#xFF0C;&#x4E5F;&#x5C31;&#x662F;&#x6709;&#x6CA1;&#x6709;&#x529E;&#x6CD5;&#x8BA9; server &#x80FD;&#x591F;&#x548C;&#x591A;&#x4E2A; client &#x8FDB;&#x884C;&#x4EA4;&#x6D41;&#xFF0C;&#x5F53;&#x7136;&#x6709;&#xFF0C;&#x5176;&#x4E2D;&#x4E00;&#x79CD;&#x529E;&#x6CD5;&#x5C31;&#x662F;&#x591A;&#x8FDB;&#x7A0B; Web Server &#x6A21;&#x578B;&#x3002;</p>
+<footer class="page-footer"><span class="copyright">&#xA9; &#x4E09;&#x6708;&#x6C99; all right reserved&#xFF0C;powered by Gitbook</span><span class="footer-modification">Updated at
+2019-05-23 11:02:59
+</span></footer>
+                                
+                                </section>
+                            
+    </div>
+    <div class="search-results">
+        <div class="has-results">
+            
+            <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+            <ul class="search-results-list"></ul>
+            
+        </div>
+        <div class="no-results">
+            
+            <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+            
+        </div>
+    </div>
+</div>
+
+                        </div>
+                    </div>
+                
+            </div>
+
+            
+                
+                <a href="ch01.html" class="navigation navigation-prev " aria-label="Previous page: 基础概念">
+                    <i class="fa fa-angle-left"></i>
+                </a>
+                
+                
+                <a href="ch03.html" class="navigation navigation-next " aria-label="Next page: 多进程模型">
+                    <i class="fa fa-angle-right"></i>
+                </a>
+                
+            
+        
+    </div>
+
+    <script>
+        var gitbook = gitbook || [];
+        gitbook.push(function() {
+            gitbook.page.hasChanged({"page":{"title":"最简单的 Web Server 模型","level":"1.4","depth":1,"next":{"title":"多进程模型","level":"1.5","depth":1,"path":"book/ch03.md","ref":"book/ch03.md","articles":[]},"previous":{"title":"基础概念","level":"1.3","depth":1,"path":"book/ch01.md","ref":"book/ch01.md","articles":[]},"dir":"ltr"},"config":{"plugins":["mermaid","github","editlink","page-toc","-lunr","-search","search-plus","tbfed-pagefooter","ga"],"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"pluginsConfig":{"tbfed-pagefooter":{"copyright":"&copy 三月沙","modify_label":"Updated at","modify_format":"YYYY-MM-DD HH:mm:ss"},"github":{"url":"https://github.com/zhyq0826/python-server-tutorial"},"editlink":{"label":"编辑本页","multilingual":false,"base":"https://github.com/zhyq0826/python-server-tutorial/blob/master"},"mermaid":{},"page-toc":{"position":"before-first","selector":".markdown-section h1, .markdown-section h2, .markdown-section h3","showByDefault":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"ga":{"configuration":"auto","token":"UA-56212296-1"},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"search-plus":{}},"theme":"default","author":"三月沙","pdf":{"pageNumbers":true,"fontSize":11,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56},"toc":true},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"variables":{},"title":"Python Server Tutorial","language":"zh-cn","gitbook":">= 3.2.2"},"file":{"path":"book/ch02.md","mtime":"2019-05-23T03:02:59.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-23T11:40:44.706Z"},"basePath":"..","book":{"language":""}});
+        });
+    </script>
+</div>
+
+        
+    <script src="../gitbook/gitbook.js"></script>
+    <script src="../gitbook/theme.js"></script>
+    
+        
+        <script src="../gitbook/gitbook-plugin-github/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-editlink/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-page-toc/anchor-3.1.1.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-page-toc/page-toc.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/jquery.mark.min.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-search-plus/search.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-ga/plugin.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-sharing/buttons.js"></script>
+        
+    
+        
+        <script src="../gitbook/gitbook-plugin-fontsettings/fontsettings.js"></script>
+        
+    
+
+    </body>
+</html>
+
