@@ -29,7 +29,6 @@ install:
 .PHONY: deploy
 deploy:
 	make build
-	git branch -D gh-pages 
 	git checkout -b gh-pages
 	git rm SUMMARY.md README.md
 	git rm -rf book src book.json
@@ -40,6 +39,7 @@ deploy:
 	git commit -m"update"
 	git push origin gh-pages --force
 	git checkout master
+	git branch -D gh-pages
 
 .PHONY: clean
 clean:
